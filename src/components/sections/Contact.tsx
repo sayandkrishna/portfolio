@@ -23,20 +23,21 @@ export const Contact: React.FC = () => {
 
     try {
       await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        'service_8y5j3qi',
+        'template_t43yln9',
         {
           from_name: formData.name,
           from_email: formData.email,
           subject: formData.subject,
           message: formData.message,
         },
-        'YOUR_PUBLIC_KEY'
+        '-7lv5fqHxaAReZ67e'
       );
 
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
+      console.error('EmailJS error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -75,8 +76,8 @@ export const Contact: React.FC = () => {
     {
       icon: Mail,
       title: 'Email',
-      value: 'your.email@example.com',
-      link: 'mailto:your.email@example.com'
+      value: 'sayandkrishna242003@gmail.com',
+      link: 'mailto:sayandkrishna242003@gmail.com'
     },
     {
       icon: Phone,
