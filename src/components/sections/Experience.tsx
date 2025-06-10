@@ -3,6 +3,7 @@ import { Calendar, MapPin, ExternalLink, Award } from 'lucide-react';
 import { GlassCard } from '../ui/GlassCard';
 import { SectionTitle } from '../ui/SectionTitle';
 import { motion } from 'framer-motion';
+import Certificates from './Certificates';
 
 export const Experience: React.FC = () => {
   const education = [
@@ -44,6 +45,15 @@ export const Experience: React.FC = () => {
   };
 
   const certifications = [
+    {
+      title: 'Prompt Design in Vertex AI Skill Badge',
+      issuer: 'Google Cloud',
+      year: '2024',
+      description: 'Demonstrated expertise in designing effective prompts for AI models using Google Cloud\'s Vertex AI platform.',
+      skills: ['Vertex AI', 'Prompt Engineering', 'AI/ML', 'Google Cloud'],
+      link: 'https://www.credly.com/badges/622841ff-e979-4f5a-9973-f63872d6da73/public_url'
+    },
+    
     {
       title: 'BCG Data Science Job Simulation',
       issuer: 'Forage',
@@ -90,7 +100,7 @@ export const Experience: React.FC = () => {
       year: '2025',
       description: 'Intensive training in deep learning with TensorFlow and Keras.',
       skills: ['TensorFlow', 'Keras', 'Deep Learning', 'Python'],
-      link: 'https://courses.opencv.org/certificates/275686be15474c3b9c7f5b8af882bcc4'
+      link: 'https://courses.opencv.org/certificates/51fb542d8191424dbe288f51bdaa18c6'
     }
   ];
 
@@ -111,12 +121,20 @@ export const Experience: React.FC = () => {
   ];
 
   return (
-    <section id="experience" className="py-20">
+    <section id="experience" className="py-20 bg-gray-900">
       <div className="container mx-auto px-4">
-        <SectionTitle 
-          title="Experience & Achievements"
-          subtitle="Professional certifications and research publications"
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl font-bold text-white mb-4">Experience</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            My professional journey and achievements
+          </p>
+        </motion.div>
 
         <motion.div 
           className="space-y-12"
@@ -298,6 +316,9 @@ export const Experience: React.FC = () => {
             </div>
           </motion.div>
         </motion.div>
+
+        {/* Add Certificates component */}
+        <Certificates />
       </div>
     </section>
   );

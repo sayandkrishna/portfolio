@@ -82,8 +82,8 @@ export const Contact: React.FC = () => {
     {
       icon: Phone,
       title: 'Phone',
-      value: '+1 234 567 890',
-      link: 'tel:+1234567890'
+      value: '+91 9061829917',
+  
     },
     {
       icon: MapPin,
