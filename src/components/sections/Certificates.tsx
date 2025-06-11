@@ -91,50 +91,45 @@ const Certificates: React.FC = () => {
   const [focused, setFocused] = useState<number>(0);
   const [modal, setModal] = useState<Certificate | null>(null);
 
-  // Constants for card dimensions and spacing (adjust as needed for desired layout)
-  const CARD_WIDTH = 500;
-  const CARD_HEIGHT = 350;
-  const CARD_SPACING = -15;
+  // Responsive card dimensions
+  const CARD_WIDTH = window.innerWidth < 768 ? 300 : 500;
+  const CARD_HEIGHT = window.innerWidth < 768 ? 200 : 350;
+  const CARD_SPACING = window.innerWidth < 768 ? -10 : -15;
 
   // Handle keyboard navigation for accessibility
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight') {
       setFocused((prev) => (prev + 1) % certificates.length);
-      if ('vibrate' in navigator) navigator.vibrate(10); // Subtle haptic feedback
+      if ('vibrate' in navigator) navigator.vibrate(10);
     }
     if (e.key === 'ArrowLeft') {
       setFocused((prev) => (prev - 1 + certificates.length) % certificates.length);
-      if ('vibrate' in navigator) navigator.vibrate(10); // Subtle haptic feedback
+      if ('vibrate' in navigator) navigator.vibrate(10);
     }
   };
 
-  // Adjust focused certificate on window resize to keep it centered
+  // Update dimensions on window resize
   useEffect(() => {
     const handleResize = () => {
-      // You could add more sophisticated logic here if needed,
-      // but for now, we just re-center the current focused card.
-      setFocused(prev => prev); // Triggers re-render for position recalculation
+      setFocused(prev => prev);
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   return (
-    <section className="py-16 bg-gray-900 overflow-hidden"> {/* Added overflow-hidden to contain cards */}
+    <section className="py-8 md:py-16 bg-gray-900 overflow-hidden">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12 text-white">Certificates</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-white">Certificates</h2>
         <div
-          className="relative flex items-center justify-center h-[400px] select-none" // Adjust height based on CARD_HEIGHT and scale
+          className="relative flex items-center justify-center h-[300px] md:h-[400px] select-none touch-pan-x"
           tabIndex={0}
           onKeyDown={handleKeyDown}
         >
           {certificates.map((cert, idx) => {
             const offset = idx - focused;
             const isFocused = idx === focused;
-
-            // Calculate x position based on offset and spacing
-            // We use a spring transition for x, scale, and filter
             const xPos = offset * (CARD_WIDTH + CARD_SPACING);
 
             return (
@@ -144,17 +139,17 @@ const Certificates: React.FC = () => {
                 style={{
                   width: CARD_WIDTH,
                   height: CARD_HEIGHT,
-                  zIndex: 10 - Math.abs(offset), // Layering for overlap effect
-                  pointerEvents: isFocused || Math.abs(offset) < 2 ? 'auto' : 'none', // Allow clicking/hovering on visible cards
+                  zIndex: 10 - Math.abs(offset),
+                  pointerEvents: isFocused || Math.abs(offset) < 2 ? 'auto' : 'none',
                 }}
-                initial={{ opacity: 0, x: xPos, scale: 0.8 }} // Initial state for cards entering view
+                initial={{ opacity: 0, x: xPos, scale: 0.8 }}
                 animate={{
                   x: xPos,
-                  scale: isFocused ? 1.15 : 0.85, // Slightly larger focused scale
+                  scale: isFocused ? 1.1 : 0.85,
                   filter: isFocused ? 'brightness(1)' : 'brightness(0.7)',
-                  y: isFocused ? 0 : 20, // Subtle vertical shift for non-focused
-                  opacity: Math.abs(offset) > 2 ? 0 : 1, // Hide cards far away
-                  rotateY: offset * 5, // Reduced subtle 3D rotation
+                  y: isFocused ? 0 : 10,
+                  opacity: Math.abs(offset) > 2 ? 0 : 1,
+                  rotateY: offset * 3,
                 }}
                 transition={{
                   type: 'spring',
@@ -164,17 +159,17 @@ const Certificates: React.FC = () => {
                 }}
                 onClick={() => {
                   setModal(cert);
-                  if ('vibrate' in navigator) navigator.vibrate(50); // Haptic feedback on click
+                  if ('vibrate' in navigator) navigator.vibrate(50);
                 }}
-                onMouseEnter={() => setFocused(idx)} // Focus on hover
+                onMouseEnter={() => setFocused(idx)}
               >
                 <img
                   src={cert.image}
                   alt={cert.name}
-                  className="w-full h-full object-cover" // Ensures image fills rectangular container, cropping as needed
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                  <h3 className="text-xl font-semibold text-white mb-1">{cert.name}</h3>
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 bg-gradient-to-t from-black/80 to-transparent">
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">{cert.name}</h3>
                   <p className="text-white text-xs opacity-80">{cert.issuer} &bull; {cert.year}</p>
                 </div>
               </motion.div>
@@ -182,35 +177,55 @@ const Certificates: React.FC = () => {
           })}
         </div>
 
+        {/* Mobile navigation dots */}
+        <div className="flex justify-center gap-2 mt-4 md:hidden">
+          {certificates.map((_, idx) => (
+            <button
+              key={idx}
+              className={`w-2 h-2 rounded-full transition-all ${
+                idx === focused ? 'bg-white scale-125' : 'bg-white/50'
+              }`}
+              onClick={() => setFocused(idx)}
+              aria-label={`Go to certificate ${idx + 1}`}
+            />
+          ))}
+        </div>
+
         {/* Modal for certificate details */}
         <AnimatePresence>
           {modal && (
             <motion.div
-              className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" // Added p-4 for mobile spacing
+              className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setModal(null)}
             >
               <motion.div
-                className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative overflow-y-auto max-h-[90vh]" // Added overflow-y-auto and max-h for long content
-                initial={{ scale: 0.8, y: 50, opacity: 0 }} // Slightly less aggressive initial y for smoother pop-up
+                className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-4 md:p-8 relative overflow-y-auto max-h-[90vh]"
+                initial={{ scale: 0.8, y: 50, opacity: 0 }}
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.8, y: 50, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 250, damping: 30 }} // Smoother pop-up transition
-                onClick={e => e.stopPropagation()} // Prevent modal from closing when clicking inside
+                transition={{ type: 'spring', stiffness: 250, damping: 30 }}
+                onClick={e => e.stopPropagation()}
               >
                 <button
-                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-2xl"
+                  className="absolute top-2 right-2 md:top-4 md:right-4 text-gray-500 hover:text-gray-900 text-2xl"
                   onClick={() => setModal(null)}
                   aria-label="Close"
                 >
                   &times;
                 </button>
-                <img src={modal.image} alt={modal.name} className="w-full h-56 object-contain rounded-xl mb-4 bg-gray-100" /> {/* object-contain here to show full certificate in modal */}
-                <h3 className="text-2xl font-bold mb-2">{modal.name}</h3>
-                <p className="text-gray-700 mb-2">{modal.description}</p>
-                <div className="mb-2 text-sm text-gray-500">Issued by <span className="font-semibold">{modal.issuer}</span> &bull; {modal.year}</div>
+                <img 
+                  src={modal.image} 
+                  alt={modal.name} 
+                  className="w-full h-48 md:h-56 object-contain rounded-xl mb-4 bg-gray-100" 
+                />
+                <h3 className="text-xl md:text-2xl font-bold mb-2">{modal.name}</h3>
+                <p className="text-gray-700 text-sm md:text-base mb-2">{modal.description}</p>
+                <div className="mb-2 text-xs md:text-sm text-gray-500">
+                  Issued by <span className="font-semibold">{modal.issuer}</span> &bull; {modal.year}
+                </div>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {modal.skills.map((skill: string, i: number) => (
                     <span key={i} className="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">{skill}</span>
@@ -221,7 +236,7 @@ const Certificates: React.FC = () => {
                     href={modal.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block mt-2 text-blue-600 hover:underline font-semibold"
+                    className="inline-block mt-2 text-blue-600 hover:underline font-semibold text-sm md:text-base"
                   >
                     View Certificate
                   </a>
