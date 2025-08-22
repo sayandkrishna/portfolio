@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, ExternalLink, Award } from 'lucide-react';
+import { Calendar, MapPin, ExternalLink, Award, Briefcase } from 'lucide-react';
 import { GlassCard } from '../ui/GlassCard';
 import { SectionTitle } from '../ui/SectionTitle';
 import { motion } from 'framer-motion';
@@ -20,6 +20,16 @@ export const Experience: React.FC = () => {
         'Proficiency in multiple programming languages and frameworks',
         'Focus on practical applications of AI in healthcare and accessibility'
       ]
+    }
+  ];
+
+  const experiences = [
+    {
+      role: 'AI Developer Intern',
+      company: 'Summit Solutions',
+      location: 'Kannur',
+      period: 'Aug 2025 – Present',
+      description: 'Developed Natural Language-to-SQL API using FastAPI with multi-step query processing pipeline. Implemented Redis semantic caching and intent detection to minimize expensive LLM calls.'
     }
   ];
 
@@ -49,7 +59,7 @@ export const Experience: React.FC = () => {
       title: 'Prompt Design in Vertex AI Skill Badge',
       issuer: 'Google Cloud',
       year: '2024',
-      description: 'Demonstrated expertise in designing effective prompts for AI models using Google Cloud\'s Vertex AI platform.',
+      description: 'Demonstrated expertise in designing effective prompts for AI models using Google\'s Vertex AI platform.',
       skills: ['Vertex AI', 'Prompt Engineering', 'AI/ML', 'Google Cloud'],
       link: 'https://www.credly.com/badges/622841ff-e979-4f5a-9973-f63872d6da73/public_url'
     },
@@ -143,6 +153,68 @@ export const Experience: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
+          {/* Experience */}
+          <motion.div 
+            className="space-y-8"
+            variants={containerVariants}
+          >
+            <motion.h3 
+              className="text-2xl font-bold text-white flex items-center gap-3"
+              variants={itemVariants}
+            >
+              <motion.div 
+                className="w-8 h-8 bg-gradient-to-r from-secondary-500 to-accent-500 rounded-lg flex items-center justify-center"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Briefcase className="w-5 h-5 text-white" />
+              </motion.div>
+              Professional Experience
+            </motion.h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+              {experiences.map((exp, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <GlassCard className="p-6 hover:bg-dark-800/40 transition-all duration-300 group">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-start">
+                          <motion.h4 
+                            className="text-lg font-bold text-white group-hover:text-secondary-400 transition-colors duration-300"
+                            whileHover={{ x: 5 }}
+                          >
+                            {exp.role}
+                          </motion.h4>
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <Calendar className="w-4 h-4" />
+                            <span>{exp.period}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-400">
+                          <span className="font-semibold">{exp.company}</span>
+                          <span>•</span>
+                          <MapPin className="w-4 h-4" />
+                          <span>{exp.location}</span>
+                        </div>
+                      </div>
+
+                      <motion.p 
+                        className="text-gray-300 text-sm leading-relaxed"
+                        variants={itemVariants}
+                      >
+                        {exp.description}
+                      </motion.p>
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
           {/* Certifications */}
           <motion.div 
             className="space-y-8"

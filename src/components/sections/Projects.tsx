@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { ExternalLink, Github, Filter, ChevronRight, Brain, Eye, Settings as Lungs, Video, MessageCircle, Search, ArrowRight } from 'lucide-react';
+import { ExternalLink, Github, Filter, Brain, Eye, Settings as Lungs, Video, MessageCircle, Search, ArrowRight } from 'lucide-react';
 import { GlassCard } from '../ui/GlassCard';
 import { SectionTitle } from '../ui/SectionTitle';
 import { motion } from 'framer-motion';
+import { ConnectDBDemo } from './ConnectDBDemo';
 
 export const Projects: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [isConnectDBDemoOpen, setIsConnectDBDemoOpen] = useState(false);
 
   const filters = [
     { id: 'all', label: 'All Projects' },
@@ -23,7 +25,7 @@ export const Projects: React.FC = () => {
       image: 'https://images.pexels.com/photos/5473955/pexels-photo-5473955.jpeg?auto=compress&cs=tinysrgb&w=800',
       technologies: ['Python', 'OpenCV', 'MediaPipe', 'Computer Vision'],
       category: 'computer-vision',
-      featured: true,
+      featured: false,
       demoUrl: '#',
       githubUrl: 'https://github.com/sayandkrishna',
       highlights: ['Real-time gesture recognition', 'Touchless interaction', 'Accessibility focused', 'Computer vision'],
@@ -36,7 +38,7 @@ export const Projects: React.FC = () => {
       image: 'https://images.pexels.com/photos/3825581/pexels-photo-3825581.jpeg?auto=compress&cs=tinysrgb&w=800',
       technologies: ['Python', 'TensorFlow', 'CNN', 'Medical Imaging'],
       category: 'healthcare',
-      featured: true,
+      featured: false,
       demoUrl: '#',
       githubUrl: 'https://github.com/sayandkrishna',
       highlights: ['Deep learning', 'Medical diagnosis', 'Image preprocessing', 'High accuracy'],
@@ -62,7 +64,7 @@ export const Projects: React.FC = () => {
       image: 'https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=800',
       technologies: ['Python', 'BERT', 'TextRank', 'Streamlit', 'NLP'],
       category: 'nlp',
-      featured: true,
+      featured: false,
       demoUrl: '#',
       githubUrl: 'https://github.com/sayandkrishna',
       highlights: ['Text summarization', 'BERT integration', 'Web deployment', 'User-friendly interface'],
@@ -88,10 +90,23 @@ export const Projects: React.FC = () => {
       image: 'https://images.pexels.com/photos/8386434/pexels-photo-8386434.jpeg?auto=compress&cs=tinysrgb&w=800',
       technologies: ['Python', 'LangChain', 'Vector Embeddings', 'LLM', 'RAG'],
       category: 'nlp',
-      featured: true,
+      featured: false,
       demoUrl: '#',
       githubUrl: 'https://github.com/sayandkrishna',
       highlights: ['LLM integration', 'Semantic search', 'Vector embeddings', 'Healthcare focus'],
+      icon: Search
+    },
+    {
+      id: 7,
+      title: 'ConnectDB – Natural Language to SQL API',
+      description: 'Engineered a production-grade API with FastAPI that translates natural language into executable SQL. Uses a Redis-backed semantic cache to minimize expensive LLM calls; falls back to LLM for SQL generation when no similar query is found. Supports conversational context across multiple databases and returns results in a clean tabular format.',
+      image: 'https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg?auto=compress&cs=tinysrgb&w=800',
+      technologies: ['FastAPI', 'Redis', 'PostgreSQL/MySQL', 'LLM', 'Semantic Search'],
+      category: 'nlp',
+      featured: true,
+      demoUrl: '#',
+      githubUrl: 'https://github.com/sayandkrishna',
+      highlights: ['Redis semantic cache', 'LLM-to-SQL generation', 'Conversational context', 'Multi-DB support'],
       icon: Search
     },
   ];
@@ -212,16 +227,27 @@ export const Projects: React.FC = () => {
                     className="flex items-center gap-4 pt-4"
                     variants={itemVariants}
                   >
-                    <motion.a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-gray-400 hover:text-secondary-400 transition-colors duration-300"
-                      whileHover={{ x: 5 }}
-                    >
-                      <ExternalLink className="w-5 h-5" />
-                      <span>Live Demo</span>
-                    </motion.a>
+                    {project.id === 7 ? (
+                      <motion.button
+                        onClick={() => setIsConnectDBDemoOpen(true)}
+                        className="flex items-center gap-2 text-gray-400 hover:text-secondary-400 transition-colors duration-300"
+                        whileHover={{ x: 5 }}
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                        <span>Live Demo</span>
+                      </motion.button>
+                    ) : (
+                      <motion.a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-gray-400 hover:text-secondary-400 transition-colors duration-300"
+                        whileHover={{ x: 5 }}
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                        <span>Live Demo</span>
+                      </motion.a>
+                    )}
                     <motion.a
                       href={project.githubUrl}
                       target="_blank"
@@ -330,13 +356,23 @@ export const Projects: React.FC = () => {
 
                   {/* Actions */}
                   <div className="flex gap-3 pt-2">
-                    <a 
-                      href={project.demoUrl}
-                      className="flex items-center gap-2 flex-1 justify-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-lg hover:shadow-lg hover:shadow-secondary-500/25 transition-all duration-300 text-sm"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      View
-                    </a>
+                    {project.id === 7 ? (
+                      <button 
+                        onClick={() => setIsConnectDBDemoOpen(true)}
+                        className="flex items-center gap-2 flex-1 justify-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-lg hover:shadow-lg hover:shadow-secondary-500/25 transition-all duration-300 text-sm"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        View
+                      </button>
+                    ) : (
+                      <a 
+                        href={project.demoUrl}
+                        className="flex items-center gap-2 flex-1 justify-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-lg hover:shadow-lg hover:shadow-secondary-500/25 transition-all duration-300 text-sm"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        View
+                      </a>
+                    )}
                     <a 
                       href={project.githubUrl}
                       className="flex items-center gap-2 px-4 py-2 border border-secondary-500/30 text-secondary-400 rounded-lg hover:bg-secondary-500/10 hover:border-secondary-400 transition-all duration-300 text-sm"
@@ -351,6 +387,9 @@ export const Projects: React.FC = () => {
           </div>
         </div>
       </div>
+      {isConnectDBDemoOpen && (
+        <ConnectDBDemo onClose={() => setIsConnectDBDemoOpen(false)} />
+      )}
     </section>
   );
 };
